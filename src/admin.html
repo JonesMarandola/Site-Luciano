@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- seo:start -->
+  <title>Admin · Performance | Dr. Luciano Canonico</title>
+  <meta name="description" content="Gerador interno de páginas de receitas do site do Dr. Luciano Canonico." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#FFFFFF" />
+  <link rel="icon" href="../favicon.ico" sizes="any" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+  <link rel="manifest" href="../site.webmanifest" />
+  <!-- seo:end -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#1B2A3B; --ink-2:#12283F; --muted:#4C6076; --line:rgba(18,40,63,.12); --bg:#FFFFFF; --bg-soft:#EAF4FC; --black:#1F6FCC; --blue-deep:#0B4C8C; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { background:var(--bg-soft); color:var(--ink); font-family:'Geist',system-ui,sans-serif; line-height:1.6; padding:40px 20px 90px; }
+    .wrap { max-width:920px; margin:0 auto; }
+    h1 { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:1.6rem; color:var(--ink-2); margin-bottom:6px; }
+    .lead { color:var(--muted); margin-bottom:30px; font-size:.94rem; max-width:60ch; }
+    .lead strong { color:var(--ink); }
+    .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:28px; margin-bottom:24px; }
+    .card h2 { font-family:'Plus Jakarta Sans',sans-serif; font-size:1rem; margin-bottom:18px; color:var(--ink-2); }
+    label { display:block; font-family:'Plus Jakarta Sans',sans-serif; font-size:.76rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-2); margin-bottom:6px; }
+    .field { margin-bottom:18px; }
+    input, textarea { width:100%; border:1.5px solid var(--line); background:#fff; padding:11px 13px; font-family:'Geist',sans-serif; font-size:.94rem; color:var(--ink); border-radius:6px; }
+    input:focus, textarea:focus { outline:none; border-color:var(--black); }
+    textarea { resize:vertical; min-height:90px; font-family:'ui-monospace',monospace; font-size:.84rem; }
+    .row2 { display:grid; gap:16px; grid-template-columns:1fr 1fr; }
+    .hint { font-size:.78rem; color:var(--muted); margin-top:5px; }
+    .btn { display:inline-flex; align-items:center; gap:8px; padding:13px 26px; border-radius:999px; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:.8rem; letter-spacing:.06em; text-transform:uppercase; border:1.5px solid var(--black); background:var(--black); color:#fff; cursor:pointer; }
+    .btn:hover { background:var(--blue-deep); }
+    .btn.copy { background:transparent; color:var(--black); padding:9px 18px; font-size:.72rem; }
+    .btn.copy:hover { background:var(--black); color:#fff; }
+    .output { display:none; }
+    .output.show { display:block; }
+    .output-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:10px; }
+    .output-head strong { font-family:'Plus Jakarta Sans',sans-serif; font-size:.86rem; color:var(--ink-2); }
+    pre.code { background:var(--ink-2); color:#cfe4fb; padding:16px; border-radius:8px; overflow:auto; font-size:.76rem; max-height:340px; white-space:pre; }
+    .steps ol { padding-left:20px; color:var(--muted); font-size:.86rem; margin-top:8px; }
+    .badge { display:inline-block; background:var(--bg-soft); color:var(--blue-deep); font-size:.72rem; font-weight:700; padding:4px 10px; border-radius:999px; margin-bottom:16px; font-family:'Plus Jakarta Sans',sans-serif; }
+    /* brand lockup */
+    .brand-mark { display: none; }
+    .site-brand-text { display: flex; flex-direction: column; align-items: flex-start; line-height: 1; letter-spacing: 0; }
+    .site-brand-text .brand-pre { font-family: 'Geist', sans-serif; font-weight: 500; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 3px; }
+    .site-brand-text .brand-name { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 1.22rem; letter-spacing: .01em; text-transform: uppercase; margin: 0; white-space: nowrap; }
+    .site-brand-text .brand-role { font-family: 'Geist', sans-serif; font-weight: 500; font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; margin: 4px 0 0; }
+    @media (max-width: 420px) { .site-brand-text .brand-name { font-size: 1.05rem; } }
+    .site-brand-text .brand-pre, .site-brand-text .brand-role { color: var(--muted); }
+    .site-brand-text .brand-name { color: var(--ink-2); }
+    /* base mobile: sem flash de toque, sem inflar fonte, toque imediato, rotulos de controle nao selecionaveis */
+    html { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    a, button, [role="button"], summary { touch-action: manipulation; }
+    .btn, button, .nav-toggle, .nav-drop a, .wa-float, .top-float, .chip { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+    input, textarea, select { font-size: max(16px, 1em); }
+    /* conteudo nunca fica atras do notch em paisagem (so vale com viewport-fit=cover) */
+    @supports (padding: max(0px)) {
+      .container { padding-left: max(24px, env(safe-area-inset-left)); padding-right: max(24px, env(safe-area-inset-right)); }
+      @media (min-width: 960px) { .container { padding-left: max(40px, env(safe-area-inset-left)); padding-right: max(40px, env(safe-area-inset-right)); } }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <span class="badge">Área administrativa (local, sem login)</span>
+    <h1>Gerador de receitas</h1>
+    <p class="lead">Site é HTML estático, não existe banco de dados publicando ao vivo. Essa página <strong>gera o código</strong> da receita nova pra você. Depois é só salvar 2 arquivos, como no passo a passo abaixo.</p>
+
+    <div class="card">
+      <h2>1. Preencha a receita</h2>
+      <div class="field">
+        <label for="titulo">Título</label>
+        <input id="titulo" placeholder="Ex: Omelete de Claras com Espinafre">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="tag">Tag (etiqueta curta)</label>
+          <input id="tag" placeholder="Ex: Baixo sódio">
+        </div>
+        <div class="field">
+          <label for="beneficio">Benefício (aparece com 💙)</label>
+          <input id="beneficio" placeholder="Ex: Indicada para hipertensão">
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="tempo">Tempo de preparo</label>
+          <input id="tempo" placeholder="Ex: 15 min">
+        </div>
+        <div class="field">
+          <label for="porcoes">Porções</label>
+          <input id="porcoes" placeholder="Ex: 2">
+        </div>
+      </div>
+      <div class="field">
+        <label for="imagem">URL da imagem (ex: link do Unsplash)</label>
+        <input id="imagem" placeholder="https://...">
+      </div>
+      <div class="field">
+        <label for="descricaoCard">Descrição curta (aparece no card da home)</label>
+        <textarea id="descricaoCard" placeholder="1 a 2 frases sobre a receita"></textarea>
+      </div>
+      <div class="field">
+        <label for="nota">Nota de saúde (por que essa receita ajuda)</label>
+        <textarea id="nota" placeholder="Explicação de 2 a 4 linhas"></textarea>
+      </div>
+      <div class="field">
+        <label for="ingredientes">Ingredientes (1 por linha)</label>
+        <textarea id="ingredientes" placeholder="2 ovos&#10;1 xícara de espinafre&#10;..."></textarea>
+      </div>
+      <div class="field">
+        <label for="modo">Modo de preparo (1 passo por linha)</label>
+        <textarea id="modo" placeholder="Bata as claras...&#10;Refogue o espinafre...&#10;..."></textarea>
+      </div>
+      <button class="btn" id="gerar">Gerar receita</button>
+      <p id="erro" role="alert" hidden style="margin-top:12px;color:#B3261E;font-size:.86rem"></p>
+    </div>
+
+    <div class="output" id="output">
+      <div class="card">
+        <div class="output-head">
+          <strong>2. Salve como novo arquivo:</strong>
+          <code id="pathLabel" style="font-size:.82rem;color:var(--blue-deep);"></code>
+          <button class="btn copy" data-target="pageCode">Copiar código da página</button>
+        </div>
+        <pre class="code" id="pageCode"></pre>
+      </div>
+
+      <div class="card">
+        <div class="output-head">
+          <strong>3. Cole esse bloco no carrossel da home E na página /receitas/:</strong>
+          <button class="btn copy" data-target="cardCode">Copiar snippet do card</button>
+        </div>
+        <pre class="code" id="cardCode"></pre>
+        <div class="steps">
+          <strong style="font-family:'Plus Jakarta Sans',sans-serif;font-size:.84rem;">Passo a passo completo:</strong>
+          <ol>
+            <li>Crie a pasta <code id="folderName"></code> dentro de <code>/receitas/</code>.</li>
+            <li>Dentro dela, crie um arquivo <code>index.html</code> e cole o código do bloco 2.</li>
+            <li>Abra o <code>index.html</code> da home, ache a seção <code>id="receitas"</code> e cole o código do bloco 3 como último item dentro de <code>&lt;div class="svc-grid"&gt;</code>.</li>
+            <li>Abra <code>/receitas/index.html</code>, ache <code>.recipe-grid</code>, duplique um card existente e troque imagem, tag, título, descrição e link pela nova receita.</li>
+            <li>Salve tudo e suba pro servidor/hospedagem. Pronto, a receita nova aparece nos dois lugares e ganha página própria.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const slugify = (s) => s.toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9\s-]/g, '').trim()
+      .replace(/\s+/g, '-').replace(/-+/g, '-');
+
+    const esc = (s) => (s || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    document.getElementById('gerar').addEventListener('click', () => {
+      const erro = document.getElementById('erro');
+      const titulo = document.getElementById('titulo').value.trim();
+      const tag = document.getElementById('tag').value.trim() || 'Saudável';
+      const beneficio = document.getElementById('beneficio').value.trim() || 'Receita saudável';
+      const tempo = document.getElementById('tempo').value.trim() || '20 min';
+      const porcoes = document.getElementById('porcoes').value.trim() || '2';
+      const imagem = document.getElementById('imagem').value.trim() || 'https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=1200&q=80';
+      const descricaoCard = document.getElementById('descricaoCard').value.trim();
+      const nota = document.getElementById('nota').value.trim();
+      const ingredientes = document.getElementById('ingredientes').value.split('\n').map(s => s.trim()).filter(Boolean);
+      const modo = document.getElementById('modo').value.split('\n').map(s => s.trim()).filter(Boolean);
+      const slug = slugify(titulo);
+
+      const faltando = [];
+      if (!titulo) faltando.push('título');
+      if (!descricaoCard) faltando.push('descrição curta');
+      if (!nota) faltando.push('nota de saúde');
+      if (!ingredientes.length) faltando.push('ingredientes');
+      if (!modo.length) faltando.push('modo de preparo');
+      if (faltando.length) {
+        erro.textContent = 'Preencha: ' + faltando.join(', ') + '.';
+        erro.hidden = false;
+        return;
+      }
+      erro.hidden = true;
+
+      const ingredientesHtml = ingredientes.map(i => `            <li>${esc(i)}</li>`).join('\n');
+      const modoHtml = modo.map(p => `            <li><p>${esc(p)}</p></li>`).join('\n');
+
+      const pageCode = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${esc(titulo)} | Dr. Luciano Canonico</title>
+  <meta name="description" content="${esc(descricaoCard)} Por Dr. Luciano Canonico." />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="icon" href="../../favicon.ico" sizes="any" />
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="${esc(titulo)} | Dr. Luciano Canonico" />
+  <meta property="og:description" content="${esc(descricaoCard)}" />
+  <meta property="og:image" content="${esc(imagem)}" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://drlucianocanonico.com.br/receitas/${slug}/" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <!-- COPIE o bloco <style> completo de uma receita existente (ex: /receitas/salada-grao-de-bico-limao/index.html) e cole aqui. -->
+</head>
+<body>
+  <header class="site">
+    <div class="container">
+      <a href="../../index.html#top" class="site-brand">
+        <span class="site-brand-text"><span class="brand-pre">Dr.</span><span class="brand-name">Luciano Canonico</span><span class="brand-role">Cardiologista</span></span>
+      </a>
+      <nav class="primary" aria-label="Navegação principal">
+        <ul>
+          <li><a href="../../index.html">Início</a></li>
+          <li><a href="../../sobre/">Sobre</a></li>
+          <li><a href="../../index.html#contato">Contato</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="../../index.html">Início</a></li><li><a href="../../receitas/">Performance</a></li><li aria-current="page">${esc(titulo)}</li></ol></nav>
+      <span class="recipe-tag">${esc(tag)}</span>
+      <h1 class="recipe-title">${esc(titulo)}</h1>
+      <div class="recipe-meta">
+        <span>⏱ <strong>${esc(tempo)}</strong> de preparo</span>
+        <span>🍽 <strong>${esc(porcoes)}</strong> porções</span>
+        <span>💙 ${esc(beneficio)}</span>
+      </div>
+      <img class="recipe-hero-img" src="${esc(imagem)}" alt="${esc(titulo)}">
+      <div class="recipe-note">
+        <strong>Por que essa receita ajuda</strong>
+        <p>${esc(nota)}</p>
+      </div>
+      <div class="recipe-grid">
+        <div>
+          <h2>Ingredientes</h2>
+          <ul class="ingredients-list">
+${ingredientesHtml}
+          </ul>
+        </div>
+        <div>
+          <h2>Modo de preparo</h2>
+          <ol class="steps-list">
+${modoHtml}
+          </ol>
+        </div>
+      </div>
+      <div class="recipe-cta">
+        <h2>Quer um acompanhamento completo pra sua saúde cardiovascular?</h2>
+        <a href="../../index.html#contato" class="btn btn-outline">Agendar consulta</a>
+      </div>
+    </div>
+  </main>
+  <footer class="site">
+    <div class="container foot-bottom">
+      <span>© 2026 Dr. Luciano Canonico. Todos os direitos reservados.</span>
+      <span>CRM 16052-PR · RQE 14596</span>
+    </div>
+  </footer>
+</body>
+</html>`;
+
+      const cardCode = `          <div class="svc-cell rv"><a class="svc rec" href="receitas/${slug}/">
+            <div class="rec-media">
+              <img src="${esc(imagem)}" alt="${esc(titulo)}" width="800" height="500" loading="lazy">
+              <span class="rec-tag">${esc(tag)}</span>
+            </div>
+            <h3 class="rec-title">${esc(titulo)}</h3>
+            <p class="svc-desc">${esc(descricaoCard)}</p>
+            <p class="svc-note"><span aria-hidden="true">&rarr;</span>Ver receita, ${esc(tempo)} de preparo</p>
+          </a></div>`;
+
+      document.getElementById('pathLabel').textContent = `/receitas/${slug}/index.html`;
+      document.getElementById('folderName').textContent = slug;
+      document.getElementById('pageCode').textContent = pageCode;
+      document.getElementById('cardCode').textContent = cardCode;
+      document.getElementById('output').classList.add('show');
+      document.getElementById('output').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.querySelectorAll('.btn.copy').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = document.getElementById(btn.dataset.target).textContent;
+        navigator.clipboard.writeText(text).then(() => {
+          const original = btn.textContent;
+          btn.textContent = 'Copiado!';
+          setTimeout(() => { btn.textContent = original; }, 1500);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

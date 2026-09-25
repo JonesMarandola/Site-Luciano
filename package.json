@@ -1,0 +1,19 @@
+{
+  "name": "dr-luciano-canonico-site",
+  "version": "1.0.0",
+  "description": "Site do Dr. Luciano Canonico, cardiologista em Londrina (PR)",
+  "scripts": {
+    "build:toast": "esbuild src/toast.jsx --bundle --minify --format=iife --jsx=automatic --define:process.env.NODE_ENV=\\\"production\\\" --outfile=assets/toast.js",
+    "configure": "node scripts/configure.mjs",
+    "build": "node scripts/build-site.mjs",
+    "admin:senha": "node scripts/protect-admin.mjs"
+  },
+  "keywords": [],
+  "dependencies": {
+    "sonner": "^2.0.8"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  },
+  "private": true
+}
